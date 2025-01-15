@@ -1,0 +1,151 @@
+:root {
+    --negro: black;
+    --amarillo: rgb(255, 219, 81);
+    --azul: rgb(55, 101, 226);  
+  }
+  
+  body {
+    font-family: 'Russo One', sans-serif;
+  }
+  
+  html {
+    background-color: var(--negro);
+  }
+  
+  body h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--amarillo);
+  }
+  
+  .buscador {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--negro);
+    color: var(--amarillo);
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .buscador-input {
+    background-color: var(--negro);
+    color: var(--amarillo); 
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    width: 200px;
+  }
+
+  .buscador-input::placeholder {
+    color: var(--azul);
+    text-align: center;
+  }
+  .boton-buscar{
+    background-color: var(--negro);
+    color: var(--azul);
+    border-color: var(--azul);
+    border-radius: 5%;
+    
+
+  }
+  .boton-reiniciar{
+    background-color: var(--negro);
+    color: var(--azul);
+    border-color: var(--azul);
+    border-radius: 5%;
+  }
+  
+  .personaje {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--amarillo);
+    background-color: var(--negro);
+    color: var(--azul);
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    justify-content: flex-start;
+  }
+  
+  .personaje .info {
+    flex: 1;
+  }
+  
+  .imagen-personaje {
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    margin-left: 15px;
+  }
+  
+  .personaje h3 {
+    margin: 0 0 10px 0;
+    color: var(--amarillo);
+  }
+  
+  .personaje p {
+    margin: 5px 0;
+  }
+
+#botones {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 5vh; 
+    margin: 0;
+  }
+  
+  .boton-buscar, .boton-reiniciar {
+    background-color: var(--negro);
+    color: var(--azul);
+    border-color: var(--azul);
+    border-radius: 5%;
+    padding: 10px 20px;
+    margin: 5px; 
+    cursor: pointer;
+  }
+  
+  #contenedor-botones {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2%;
+  }
+  
+  #btnAnterior, #btnSiguiente {
+    background-color: var(--negro);
+    color: var(--azul);
+    border-color: var(--azul);
+    border-radius: 5%;
+    padding: 5px 10px;
+  }
+  #logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 175px;
+    margin: auto auto; 
+}
+
+
+
+::-webkit-scrollbar {
+    width: 12px; 
+    height: 12px; 
+  }
+  
+
+  ::-webkit-scrollbar-track {
+    background-color: black; 
+    border-radius: 10px; 
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #3ae02e 85%, grey 15%); 
+    border-radius: 10px; 
+    border: 3px solid #222;
+  }
+
+  
