@@ -1,37 +1,30 @@
-const buscador = document.getElementsByClassName("buscador-input")[0]; 
-const boton = document.getElementsByClassName("boton-buscar")[0]; 
-const reiniciar = document.getElementsByClassName("boton-reiniciar")[0];
+const buscador = document.getElementsByClassName("buscador-input")[0];
+let controller;
 
-// Página y navegación
-let pagina = 1;
-const btnAnterior = document.getElementById("btnAnterior");
-const btnSiguiente = document.getElementById("btnSiguiente");
-
-btnSiguiente.addEventListener("click", () => {
-  pagina += 1;
-  cargarPersonajes();
-});
-
-btnAnterior.addEventListener("click", () => {
-  if (pagina > 1) {
-    pagina -= 1;
-    cargarPersonajes();
+async function buscar() {
+  if (controller) {
+    controller.abort(); 
   }
+  controller = new AbortController(); 
+}
+
+buscador.addEventListener("input", () => {
+  const texto = buscador.value.toLowerCase().trim();
+  cargarPersonajes(texto);
 });
 
-const baseImageUrl = "https://starwars-visualguide.com/assets/img/characters/";
-const placeholderImagen = "https://via.placeholder.com/150";
-
-const cargarPersonajes = async (searchTerm = "") => {
+const cargarPersonajes = async (texto = "") => {
   try {
+    await buscar(); 
+
     let url = "";
-    if (searchTerm === "") {
+    if (texto === "") {
       url = `https://swapi.py4e.com/api/people/?page=${pagina}`;
     } else {
-      url = `https://swapi.py4e.com/api/people/?search=${searchTerm}&page=${pagina}`;
+      url = `https://swapi.py4e.com/api/people/?search=${texto}&page=${pagina}`;
     }
 
-    let respuesta = await fetch(url);
+    const respuesta = await fetch(url, { signal: controller.signal });
 
     if (respuesta.ok) {
       const datos = await respuesta.json();
@@ -41,15 +34,13 @@ const cargarPersonajes = async (searchTerm = "") => {
 
       for (const personaje of personajes) {
         if (personaje.name === "Wedge Antilles") {
-          continue; // Elimina este personaje específico
+          continue; // Excluye a Wedge Antilles
         }
 
-        // Obtener el nombre del planeta
         const homeworld = await fetch(personaje.homeworld);
         const homeworldData = await homeworld.json();
         const planetaNombre = homeworldData.name;
 
-        // Obtener las películas
         const peliculas = await Promise.all(
           personaje.films.map(async (filmUrl) => {
             const filmResponse = await fetch(filmUrl);
@@ -88,29 +79,34 @@ const cargarPersonajes = async (searchTerm = "") => {
       document.getElementById("contenedor").innerHTML = "<p>Error al cargar los personajes.</p>";
     }
   } catch (error) {
-    console.error("Error al realizar la solicitud:", error);
-    document.getElementById("contenedor").innerHTML = "<p>Error al cargar los personajes.</p>";
+    if (error.name === "AbortError") {
+      console.log("La solicitud fue cancelada.");
+    } else {
+      console.error("Error al realizar la solicitud:", error);
+      document.getElementById("contenedor").innerHTML = "<p>Error al cargar los personajes.</p>";
+    }
   }
 };
 
-// Iniciar la carga de personajes
+// Paginación
+let pagina = 1;
+const btnAnterior = document.getElementById("btnAnterior");
+const btnSiguiente = document.getElementById("btnSiguiente");
+
+btnSiguiente.addEventListener("click", () => {
+  pagina += 1;
+  cargarPersonajes();
+});
+
+btnAnterior.addEventListener("click", () => {
+  if (pagina > 1) {
+    pagina -= 1;
+    cargarPersonajes();
+  }
+});
+
+const baseImageUrl = "https://starwars-visualguide.com/assets/img/characters/";
+const placeholderImagen = "https://via.placeholder.com/150";
+
+// Carga inicial de los personajes
 cargarPersonajes();
-
-// Función para buscar personajes
-const buscarPersonajes = () => {
-  const searchTerm = buscador.value; 
-  pagina = 1;  // Al hacer una nueva búsqueda, siempre volvemos a la página 1
-  cargarPersonajes(searchTerm); 
-};
-
-// Función para reiniciar la búsqueda
-const reiniciarpagina = () => {
-  const searchTerm = "";  // Resetear la búsqueda
-  buscador.value = "";
-  pagina = 1;  // Volver a la página 1 al reiniciar
-  cargarPersonajes(searchTerm);
-}
-
-// Agregar el evento a los botones
-boton.addEventListener("click", buscarPersonajes);
-reiniciar.addEventListener("click", reiniciarpagina);
